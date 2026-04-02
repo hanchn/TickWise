@@ -2,14 +2,10 @@
 import { ref, computed } from 'vue'
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls } from '@tresjs/cientos'
-import Clock3D from './components/Clock3D.vue'
-import FishingGame from './components/FishingGame.vue'
-
-const activeTab = ref<'clock' | 'fishing'>('fishing')
+import Clock3D from '../components/Clock3D.vue'
 
 const score = ref(0)
 const feedback = ref('')
-
 
 // Game modes
 type GameMode = 'hour' | 'minute'
@@ -115,32 +111,10 @@ const checkAnswer = (opt: string) => {
 </script>
 
 <template>
-  <div class="h-screen w-screen bg-blue-50 flex flex-col font-sans overflow-hidden">
-    
-    <!-- App Navigation -->
-    <nav class="bg-white p-3 flex justify-center gap-4 shadow-sm z-20 relative">
-      <button 
-        @click="activeTab = 'clock'"
-        class="px-6 py-2 rounded-full font-bold text-lg transition-all duration-200"
-        :class="activeTab === 'clock' ? 'bg-blue-500 text-white shadow-md' : 'text-gray-500 hover:bg-gray-100'"
-      >
-        🕒 认识时间
-      </button>
-      <button 
-        @click="activeTab = 'fishing'"
-        class="px-6 py-2 rounded-full font-bold text-lg transition-all duration-200"
-        :class="activeTab === 'fishing' ? 'bg-sky-400 text-white shadow-md' : 'text-gray-500 hover:bg-gray-100'"
-      >
-        🎣 钓鱼游戏
-      </button>
-    </nav>
-
-    <!-- Clock Game Area -->
-    <div v-if="activeTab === 'clock'" class="flex-1 flex flex-col relative">
-      <!-- Header -->
-      <header class="p-6 text-center shadow-sm bg-white rounded-b-3xl z-10 relative">
-        <h1 class="text-4xl font-extrabold text-blue-600 mb-4">认识时间 3D 游戏</h1>
-
+  <div class="flex-1 flex flex-col relative h-full w-full">
+    <!-- Header -->
+    <header class="p-6 text-center shadow-sm bg-white rounded-b-3xl z-10 relative">
+      <h1 class="text-4xl font-extrabold text-blue-600 mb-4">认识时间 3D 游戏</h1>
       
       <!-- Mode Switcher -->
       <div class="flex justify-center gap-4 mb-2">
@@ -167,7 +141,6 @@ const checkAnswer = (opt: string) => {
 
     <!-- Main Game Area -->
     <main class="flex-1 flex flex-col lg:flex-row relative">
-      
       <!-- 3D Canvas Container -->
       <div class="flex-1 relative min-h-[50vh] w-full h-full bg-slate-50">
         <TresCanvas alpha shadows>
@@ -192,7 +165,6 @@ const checkAnswer = (opt: string) => {
 
       <!-- Controls Panel -->
       <div class="lg:w-1/3 p-4 lg:p-8 flex flex-col justify-start items-center bg-white/50 backdrop-blur-sm border-l border-white/50 z-10 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] lg:shadow-none overflow-y-auto">
-        
         <div class="h-12 mb-2 flex items-center justify-center">
           <p v-if="feedback" class="text-xl font-bold text-center animate-bounce" :class="feedback.includes('对') ? 'text-green-500' : 'text-orange-500'">
             {{ feedback }}
@@ -239,23 +211,7 @@ const checkAnswer = (opt: string) => {
             {{ opt }}
           </button>
         </div>
-        
       </div>
     </main>
-    </div>
-
-    <!-- Fishing Game Area -->
-    <div v-if="activeTab === 'fishing'" class="flex-1 w-full h-full relative">
-      <FishingGame />
-    </div>
-
   </div>
 </template>
-
-<style>
-/* Basic styling to prevent scrolling issues on mobile */
-body {
-  overflow: hidden;
-  touch-action: none;
-}
-</style>
