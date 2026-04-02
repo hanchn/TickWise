@@ -14,6 +14,9 @@ const currentMode = ref<GameMode>('hour')
 // State for controlling the manual target time override
 const isManualTarget = ref(false)
 
+// State for showing/hiding the manual time control panel to prevent cheating
+const showTimeControls = ref(false)
+
 // Generate a random time based on mode
 const generateRandomTime = () => {
   const h = Math.floor(Math.random() * 12) + 1
@@ -171,21 +174,30 @@ const checkAnswer = (opt: string) => {
         </div>
 
         <!-- Manual Time Controls -->
-        <div class="w-full max-w-sm mb-4 bg-white/90 rounded-3xl shadow-sm border border-gray-100 p-4">
-          <p class="text-center text-sm font-bold text-gray-400 mb-3">或者自己调时间：</p>
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-3 justify-center">
-              <span class="text-sm font-bold text-gray-400 w-8 text-right">小时</span>
-              <button @click="adjustTime('hour', -1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 hover:scale-110 active:scale-95 transition-all font-bold text-xl">-</button>
-              <span class="text-2xl font-black text-slate-700 w-8 text-center">{{ targetTime.h }}</span>
-              <button @click="adjustTime('hour', 1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 hover:scale-110 active:scale-95 transition-all font-bold text-xl">+</button>
-            </div>
-            
-            <div class="flex items-center gap-3 justify-center" :class="{'opacity-40 grayscale pointer-events-none': currentMode === 'hour'}">
-              <span class="text-sm font-bold text-gray-400 w-8 text-right">分钟</span>
-              <button @click="adjustTime('minute', -15)" class="w-10 h-10 flex items-center justify-center rounded-full bg-green-100 text-green-600 hover:bg-green-200 hover:scale-110 active:scale-95 transition-all font-bold text-xl">-</button>
-              <span class="text-2xl font-black text-slate-700 w-8 text-center">{{ targetTime.m.toString().padStart(2, '0') }}</span>
-              <button @click="adjustTime('minute', 15)" class="w-10 h-10 flex items-center justify-center rounded-full bg-green-100 text-green-600 hover:bg-green-200 hover:scale-110 active:scale-95 transition-all font-bold text-xl">+</button>
+        <div class="w-full max-w-sm mb-4">
+          <button 
+            @click="showTimeControls = !showTimeControls" 
+            class="w-full text-center text-sm font-bold text-gray-400 mb-2 hover:text-gray-600 transition-colors flex items-center justify-center gap-1"
+          >
+            <span v-if="!showTimeControls">⚙️ 开启手动调时</span>
+            <span v-else>🔒 关闭调时 (防作弊)</span>
+          </button>
+          
+          <div v-if="showTimeControls" class="bg-white/90 rounded-3xl shadow-sm border border-gray-100 p-4 transition-all animate-fade-in">
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center gap-3 justify-center">
+                <span class="text-sm font-bold text-gray-400 w-8 text-right">小时</span>
+                <button @click="adjustTime('hour', -1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 hover:scale-110 active:scale-95 transition-all font-bold text-xl">-</button>
+                <span class="text-2xl font-black text-slate-700 w-8 text-center">{{ targetTime.h }}</span>
+                <button @click="adjustTime('hour', 1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 hover:scale-110 active:scale-95 transition-all font-bold text-xl">+</button>
+              </div>
+              
+              <div class="flex items-center gap-3 justify-center" :class="{'opacity-40 grayscale pointer-events-none': currentMode === 'hour'}">
+                <span class="text-sm font-bold text-gray-400 w-8 text-right">分钟</span>
+                <button @click="adjustTime('minute', -15)" class="w-10 h-10 flex items-center justify-center rounded-full bg-green-100 text-green-600 hover:bg-green-200 hover:scale-110 active:scale-95 transition-all font-bold text-xl">-</button>
+                <span class="text-2xl font-black text-slate-700 w-8 text-center">{{ targetTime.m.toString().padStart(2, '0') }}</span>
+                <button @click="adjustTime('minute', 15)" class="w-10 h-10 flex items-center justify-center rounded-full bg-green-100 text-green-600 hover:bg-green-200 hover:scale-110 active:scale-95 transition-all font-bold text-xl">+</button>
+              </div>
             </div>
           </div>
         </div>
